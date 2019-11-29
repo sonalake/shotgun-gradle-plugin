@@ -12,36 +12,38 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * A simple functional test for the 'com.sonalake.shotgun.greeting' plugin.
  */
-public class ShotgunGradlePluginPluginFunctionalTest {
+public class ShotgunGradlePluginFunctionalTest {
     @Test
     public void canRunTask() throws IOException {
         // Setup the test build
+        Path currentDir = Paths.get(".");
         File projectDir = new File("build/functionalTest");
         Files.createDirectories(projectDir.toPath());
         writeString(new File(projectDir, "settings.gradle"), "");
         writeString(new File(projectDir, "build.gradle"),
-                "plugins { id('com.sonalake.shotgun')}" +
+                "plugins { id('shotgun-gradle-plugin')}" +
                         "\n shotgun { " +
-                        "   inputDirectory '/home/daniel/workspaces/plaything/shotgun-gradle-plugin'" +
+                        "   inputDirectory '"+currentDir.toAbsolutePath().toString()+"'" +
                         "}");
 
         // Run the build
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withPluginClasspath();
-        runner.withArguments("analyse", "--stacktrace");
+        runner.withArguments("shotgun", "--stacktrace");
         runner.withProjectDir(projectDir);
         BuildResult result = runner.build();
 
         // Verify the result
-        assertEquals("", result.getOutput());
+        assertTrue(result.getOutput().contains("Report written to .shotgun/report.html"));
     }
 
     private void writeString(File file, String string) throws IOException {
