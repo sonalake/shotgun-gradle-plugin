@@ -51,3 +51,17 @@ The default options are suitable for most java projects
       topCommitValueForFiles    =   40
       legendLevels              =   ["10", "20", "30", 50", "80", "120"]
     }
+
+### Running the plugin
+
+Simple enough
+
+    ./gradlew shotgun
+
+### Jenkins configuration
+
+when you ask a jenkins pipeline to check out a branch, it _actually_ checks out
+a _commit_. You need to configure the pipeline to add the _additional behavior_ to
+checkout to a branch.
+
+![](docs/checkout-to-branch.png) 
