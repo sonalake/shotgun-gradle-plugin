@@ -49,7 +49,7 @@ The default options are suitable for most java projects
       minimumCommitInterest     =   3
       topCommitValueForFileSets =   10
       topCommitValueForFiles    =   40
-      legendLevels              =   ["10", "20", "30", "50", "80", "120"]
+      legendLevels              =   [10, 20, 30, 50, 80, 120]
     }
 
 ### Running the plugin
