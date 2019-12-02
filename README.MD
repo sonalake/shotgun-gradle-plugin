@@ -30,10 +30,10 @@ include this setting so your gradle will know to look into our nexus.
 
 The minimum configuration is a simple
 
-    shotgun 
-    
-This will scan the current directory, and using defaults, will write out to 
-`.shotgun/report.html`    
+    shotgun
+
+This will scan the current directory, and using defaults, will write out to
+`.shotgun/report.html`
 
 
 The default options are suitable for most java projects
@@ -49,7 +49,7 @@ The default options are suitable for most java projects
       minimumCommitInterest     =   3
       topCommitValueForFileSets =   10
       topCommitValueForFiles    =   40
-      legendLevels              =   ["10", "20", "30", 50", "80", "120"]
+      legendLevels              =   ["10", "20", "30", "50", "80", "120"]
     }
 
 ### Running the plugin
@@ -64,4 +64,10 @@ when you ask a jenkins pipeline to check out a branch, it _actually_ checks out
 a _commit_. You need to configure the pipeline to add the _additional behavior_ to
 checkout to a branch.
 
-![](docs/checkout-to-branch.png) 
+![](docs/checkout-to-branch.png)
+
+You may also need to allow scripts on the page in the rendered iframe, this means
+setting this
+
+    System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+
