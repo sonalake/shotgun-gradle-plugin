@@ -67,7 +67,7 @@ checkout to a branch.
 ![](docs/checkout-to-branch.png)
 
 You may also need to allow scripts on the page in the rendered iframe, this means
-setting this
+setting the following in https://builds.sonalake.com/jenkins/script
 
     System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
 
