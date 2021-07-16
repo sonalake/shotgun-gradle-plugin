@@ -29,7 +29,7 @@ public class ShotgunGradlePluginFunctionalTest {
         Files.createDirectories(projectDir.toPath());
         writeString(new File(projectDir, "settings.gradle"), "");
         writeString(new File(projectDir, "build.gradle"),
-                "plugins { id('shotgun-gradle-plugin')}" +
+                "plugins { id('com.sonalake.shotgun-gradle-plugin')}" +
                         "\n shotgun { " +
                         "   inputDirectory '"+currentDir.toAbsolutePath().toString()+"'" +
                         "}");

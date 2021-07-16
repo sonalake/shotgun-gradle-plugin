@@ -27,7 +27,7 @@ public class ShotgunGradlePluginTest {
     Project project = ProjectBuilder.builder().build();
 
     // apply the plugin
-    project.getPlugins().apply("shotgun-gradle-plugin");
+    project.getPlugins().apply("com.sonalake.shotgun-gradle-plugin");
 
     // now configure this
     String here = Path.of(".").toAbsolutePath().toString();
