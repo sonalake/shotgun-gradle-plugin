@@ -10,10 +10,10 @@ A gradle configuration plugin for [shotgun](https://github.com/sonalake/shotgun)
 
 In `build.gradle`
 
-Add the plugin
+Add the plugin (more details in [plugins.gradle.org](https://plugins.gradle.org/plugin/com.sonalake.shotgun-gradle-plugin))
 
     plugins {
-      id 'shotgun-gradle-plugin' version "1.0.0"
+      id 'com.sonalake.shotgun-gradle-plugin' version "1.0.0"
     }
 
 ## Configuring the plugin
