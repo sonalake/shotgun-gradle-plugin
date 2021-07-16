@@ -1,6 +1,6 @@
 # Shotgun Gradle Plugin
 
-A gradle configuration plugin for [shotgun](https://bitbucket.org/sonalake/shotgun)
+A gradle configuration plugin for [shotgun](https://github.com/sonalake/shotgun)
 
 ## Using the plugin
 
@@ -9,22 +9,8 @@ In `build.gradle`
 Add the plugin
 
     plugins {
-      id 'shotgun-gradle-plugin' version "1.0.0-SNAPSHOT"
+      id 'shotgun-gradle-plugin' version "1.0.0"
     }
-
-### Finding the plugin
-
-Unless we make this public, you'll need to update your `settings.gradle` to
-include this setting so your gradle will know to look into our nexus.
-
-
-    pluginManagement {
-      repositories {
-        maven {url "http://atlanta:8081/nexus/content/groups/public"}
-        gradlePluginPortal()
-      }
-    }
-
 
 ## Configuring the plugin
 
@@ -57,17 +43,3 @@ The default options are suitable for most java projects
 Simple enough
 
     ./gradlew shotgun
-
-### Jenkins configuration
-
-when you ask a jenkins pipeline to check out a branch, it _actually_ checks out
-a _commit_. You need to configure the pipeline to add the _additional behavior_ to
-checkout to a branch.
-
-![](docs/checkout-to-branch.png)
-
-You may also need to allow scripts on the page in the rendered iframe, this means
-setting the following in https://builds.sonalake.com/jenkins/script
-
-    System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
-

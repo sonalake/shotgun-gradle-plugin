@@ -109,7 +109,7 @@ gradlePlugin {
 }
 
 group = "com.sonalake"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 // Add a source set for the functional test suite
 sourceSets {
