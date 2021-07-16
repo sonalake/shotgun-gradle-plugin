@@ -1,5 +1,9 @@
 # Shotgun Gradle Plugin
 
+[![CI Build](https://github.com/sonalake/shotgun-gradle-plugin/workflows/CI%20Build/badge.svg)](https://github.com/sonalake/shotgun-gradle-plugin)
+[![codecov](https://codecov.io/gh/sonalake/shotgun-gradle-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/sonalake/shotgun-gradle-plugin)
+
+
 A gradle configuration plugin for [shotgun](https://github.com/sonalake/shotgun)
 
 ## Using the plugin
