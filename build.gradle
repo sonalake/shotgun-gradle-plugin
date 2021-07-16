@@ -1,0 +1,195 @@
+
+
+buildscript {
+  repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/libs-release" }
+    mavenCentral()
+  }
+}
+
+plugins {
+  id 'java'
+  id 'com.github.kt3k.coveralls' version '2.10.1'
+  id 'java-gradle-plugin'
+  id 'com.gradle.plugin-publish' version '0.12.0'
+
+}
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+repositories {
+  jcenter()
+  mavenCentral()
+  maven { url "https://repo.spring.io/plugins-release/" }
+  maven { url "https://maven.geomajas.org/" }
+}
+
+
+
+// a parameter is defined if it's been passed in and isn't blank
+ext.isParameterDefined = { String paramName ->
+  return project.hasProperty(paramName) && !project.getProperties().get(paramName).toString().isBlank();
+}
+
+// some configs of interest to the developer
+// don't try to sign and release if we have the settings we care about
+ext.isForSigning = isParameterDefined("signing.keyId") && isParameterDefined("signing.password")
+// don't try to publish to OSSRH if there is no username/password
+ext.isForOssrhPublishing = isParameterDefined('ossrhUsername') && isParameterDefined('ossrhPassword')
+// is this a release or a snapshot
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+// don't try to publish the gradle plugin if there is no key/secret
+ext.isForPluginPublishing = isParameterDefined('gradle.publish.key') && isParameterDefined('gradle.publish.secret')
+
+
+repositories {
+  jcenter()
+  mavenCentral()
+  maven { url "https://repo.spring.io/plugins-release/" }
+  maven { url "https://maven.geomajas.org/" }
+}
+
+configurations.all {
+  exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
+dependencies {
+  implementation group: 'com.sonalake', name: 'shotgun', version: '1.0.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+
+  testImplementation 'junit:junit:4.12'
+  testImplementation gradleTestKit()
+}
+
+
+jacocoTestReport {
+  reports {
+    html.enabled = true
+    xml.enabled = true
+    csv.enabled = false
+  }
+}
+test {
+  finalizedBy jacocoTestReport
+}
+
+task javadocJar(type: Jar) {
+  archiveClassifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  archiveClassifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
+
+pluginBundle {
+  website = 'https://github.com/sonalake/shotgun-gradle-plugin'
+  vcsUrl = 'https://github.com/sonalake/shotgun-gradle-plugin'
+  tags = ['quality']
+}
+
+gradlePlugin {
+  plugins {
+    shotgunPlugin {
+      id = 'shotgun-gradle-plugin'
+      displayName = 'Shotgun Plugin'
+      description = 'Analyse git commit history to warn about hotspots'
+      implementationClass = 'com.sonalake.shotgun.ShotgunGradlePlugin'
+    }
+  }
+}
+
+group = "com.sonalake"
+version = "1.0.0"
+
+// Add a source set for the functional test suite
+sourceSets {
+  functionalTest {
+  }
+}
+
+gradlePlugin.testSourceSets(sourceSets.functionalTest)
+configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+
+// Add a task to run the functional tests
+task functionalTest(type: Test) {
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+check {
+  // Run the functional tests as part of `check`
+  dependsOn(tasks.functionalTest)
+}
+
+
+
+signing {
+  sign configurations.archives
+}
+tasks.withType(Sign) {
+  onlyIf { isForSigning }
+}
+
+if (isForOssrhPublishing) {
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+          name = 'shotgun-gradle-plugin'
+          packaging 'jar'
+          // optionally artifactId can be defined here
+          description 'Build an asciidoc shotgun metric page'
+          url = 'https://github.com/sonalake/shotgun-gradle-plugin'
+
+          scm {
+            connection = 'scm:git:git@github.com:sonalake/shotgun-gradle-plugin.git'
+            developerConnection = 'scm:git:git@github.com:sonalake/shotgun-gradle-plugin.git'
+            url = 'https://github.com/sonalake/shotgun-gradle-plugin'
+          }
+
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          developers {
+            developer {
+              id 'daniel-bray-sonalake'
+              name 'Daniel Bray'
+              email 'daniel.bray@sonatype.com'
+            }
+          }
+
+        }
+      }
+    }
+  }
+}
+
+
+// we can only release final versions here
+publishPlugins {
+  onlyIf { isReleaseVersion && isForPluginPublishing }
+}
