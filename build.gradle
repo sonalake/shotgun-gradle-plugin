@@ -158,7 +158,7 @@ if (isForOssrhPublishing) {
           name = 'shotgun-gradle-plugin'
           packaging 'jar'
           // optionally artifactId can be defined here
-          description 'Build an asciidoc swagger changelog from a nexus history'
+          description 'Build an asciidoc shotgun metric page'
           url = 'https://github.com/sonalake/shotgun-gradle-plugin'
 
           scm {
