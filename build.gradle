@@ -100,7 +100,7 @@ pluginBundle {
 gradlePlugin {
   plugins {
     shotgunPlugin {
-      id = 'shotgun-gradle-plugin'
+      id = 'com.sonalake.shotgun-gradle-plugin'
       displayName = 'Shotgun Plugin'
       description = 'Analyse git commit history to warn about hotspots'
       implementationClass = 'com.sonalake.shotgun.ShotgunGradlePlugin'
